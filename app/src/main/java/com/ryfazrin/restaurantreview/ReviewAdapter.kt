@@ -1,23 +1,23 @@
 package com.ryfazrin.restaurantreview
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ReviewAdapter(private val listReview: List<String>) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewAdapter.ViewHolder {
-        TODO("Not yet implemented")
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_review, parent, false))
 
     override fun onBindViewHolder(holder: ReviewAdapter.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.tvItem.text = listReview[position]
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+    override fun getItemCount() = listReview.size
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvItem: TextView = view.findViewById(R.id.tvItem)
     }
 }
