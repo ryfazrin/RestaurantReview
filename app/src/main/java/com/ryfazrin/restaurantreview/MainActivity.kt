@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.ryfazrin.restaurantreview.databinding.ActivityMainBinding
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,8 +34,7 @@ class MainActivity : AppCompatActivity() {
     private fun findRestaurant() {
         showLoading(true)
         val client = ApiConfig.getApiService().getRestaurant(RESTAURANT_ID)
-        client.enqueue(object : Callback<RestaurantResponse>,
-            retrofit2.Callback<RestaurantResponse> {
+        client.enqueue(object : Callback<RestaurantResponse> {
             override fun onResponse(
                 call: Call<RestaurantResponse>,
                 response: Response<RestaurantResponse>
