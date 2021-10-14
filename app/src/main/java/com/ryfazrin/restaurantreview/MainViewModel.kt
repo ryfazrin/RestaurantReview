@@ -51,6 +51,31 @@ class MainViewModel : ViewModel() {
         })
     }
 
+    private fun postReview(review: String) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().postReview(RESTAURANT_ID, "Dicoding", review)
+        client.enqueue(object : Callback<PostReviewResponse> {
+            override fun onResponse(
+                call: Call<PostReviewResponse>,
+                response: Response<PostReviewResponse>
+            ) {
+                _isLoading.value = false
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    _listReview.value = response.body()?.customerReviews
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+
+        })
+    }
+
     companion object {
         private const val TAG = "MainViewModel"
         private const val RESTAURANT_ID = "uewq1zg2zlskfw1e867"
