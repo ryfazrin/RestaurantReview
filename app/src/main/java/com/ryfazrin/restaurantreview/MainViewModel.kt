@@ -51,7 +51,7 @@ class MainViewModel : ViewModel() {
         })
     }
 
-    private fun postReview(review: String) {
+    fun postReview(review: String) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().postReview(RESTAURANT_ID, "Dicoding", review)
         client.enqueue(object : Callback<PostReviewResponse> {
