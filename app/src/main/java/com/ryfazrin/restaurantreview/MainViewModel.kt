@@ -20,7 +20,7 @@ class MainViewModel : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val _snackbarText = MutableLiveData<String>()
-    val snackbar: LiveData<String> = _snackbarText
+    val snackbarText: LiveData<String> = _snackbarText
 
     init {
         findRestaurant()
