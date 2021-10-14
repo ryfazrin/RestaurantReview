@@ -24,28 +24,28 @@ class MainViewModel : ViewModel() {
     }
 
     private fun findRestaurant() {
-        showLoading(true)
-        val client = ApiConfig.getApiService().getRestaurant(MainActivity.RESTAURANT_ID)
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getRestaurant(RESTAURANT_ID)
         client.enqueue(object : Callback<RestaurantResponse> {
             override fun onResponse(
                 call: Call<RestaurantResponse>,
                 response: Response<RestaurantResponse>
             ) {
-                showLoading(false)
+                _isLoading.value = false
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        setRestaurantData(responseBody.restaurant)
-                        setReviewData(responseBody.restaurant.customerReviews)
+                        _restaurant.value = response.body()?.restaurant
+                        _listReview.value = response.body()?.restaurant?.customerReviews
                     }
                 } else {
-                    Log.e(MainActivity.TAG, "onFailure: ${response.message()}")
+                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<RestaurantResponse>, t: Throwable) {
-                showLoading(false)
-                Log.e(MainActivity.TAG, "onFailure: ${t.message}")
+                _isLoading.value = false
+                Log.e(TAG, "onFailure: ${t.message}")
             }
 
         })
