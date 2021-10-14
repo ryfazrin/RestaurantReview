@@ -1,8 +1,12 @@
 package com.ryfazrin.restaurantreview
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainViewModel : ViewModel() {
 
@@ -14,6 +18,38 @@ class MainViewModel : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    init {
+        findRestaurant()
+    }
+
+    private fun findRestaurant() {
+        showLoading(true)
+        val client = ApiConfig.getApiService().getRestaurant(MainActivity.RESTAURANT_ID)
+        client.enqueue(object : Callback<RestaurantResponse> {
+            override fun onResponse(
+                call: Call<RestaurantResponse>,
+                response: Response<RestaurantResponse>
+            ) {
+                showLoading(false)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        setRestaurantData(responseBody.restaurant)
+                        setReviewData(responseBody.restaurant.customerReviews)
+                    }
+                } else {
+                    Log.e(MainActivity.TAG, "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<RestaurantResponse>, t: Throwable) {
+                showLoading(false)
+                Log.e(MainActivity.TAG, "onFailure: ${t.message}")
+            }
+
+        })
+    }
 
     companion object {
         private const val TAG = "MainViewModel"
